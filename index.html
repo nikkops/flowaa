@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blooming Lilies</title>
+
+  <style>
+    html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    body {
+      background-color: #0b0b10;
+      background-image: url("Images/background.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Flexbox layout */
+    .layout {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* push left & right apart */
+        width: 100%;                    /* full width */
+        max-width: 1200px;              /* optional: keeps things neat on wide screens */
+        padding: 0 0;    
+        }
+
+    .center {
+        flex: 1;                        /* takes remaining space */
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Left picture */
+    #side-pic {
+      width: 22vw;
+      border-radius: 5px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Center bouquet */
+    #bouquet {
+      width: 27vw;
+      transition: transform 0.1s ease;
+      cursor: pointer;
+    }
+
+    #bouquet:hover {
+      transform: scale(1.1);
+    }
+
+    .right {
+    width: 25vw;              /* same as #right-pic */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    /* Right image */
+    #right-pic {
+    width: 25vw;
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    visibility: hidden;
+    }
+
+    #right-pic.show {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+    }
+
+    #right-pic.hide {
+    opacity: 0;
+    transform: translateX(-50px);
+    visibility: visible; /* still visible until fade completes */
+    }
+
+
+
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Left side image -->
+    <div class="left">
+      <img id="side-pic" src="Images/howtouse.png" alt="Side Picture">
+    </div>
+
+    <!-- Center bouquet -->
+    <div class="center">
+      <img id="bouquet" src="Images/bouquet1.png" alt="Bouquet">
+    </div>
+
+    <!-- Right image -->
+    <div class="right">
+      <img id="right-pic" src="" alt="Right Picture">
+    </div>
+  </div>
+
+  <audio id="bg-music" src="Music/Those Eyes.mp3" autoplay loop muted></audio>
+
+  <script>
+    const bouquet = document.getElementById("bouquet");
+    const rightPic = document.getElementById("right-pic");
+    const music = document.getElementById("bg-music");
+
+    // bouquet stages
+    const stages = [
+    "Images/flower bud.png", // no right image
+    "Images/bouquet1.png",   // firstpage
+    "Images/bouquet2.png",   // secondpage
+    "Images/bouquet3.png",   // thirdpage
+    "Images/bouquet4.png"    // finalpage
+    ];
+
+    // right-side pages
+    const pages = [
+    "Images/firstpage.png",
+    "Images/secondpage.png",
+    "Images/thirdpage.png",
+    "Images/finalpage.png"
+    ];
+
+    let currentStage = 0;
+
+    bouquet.addEventListener("click", () => {
+    // 🎵 Unmute music on first click
+    if (music.muted) {
+      music.muted = false;
+      music.volume = 0.6;
+      music.play();
+    }
+    
+    // cycle bouquet
+    currentStage = (currentStage + 1) % stages.length;
+    bouquet.src = stages[currentStage];
+
+    if (currentStage > 0) {
+    rightPic.classList.remove("show");
+    rightPic.classList.add("hide");
+
+    setTimeout(() => {
+        rightPic.src = pages[currentStage - 1];
+        rightPic.classList.remove("hide");
+        void rightPic.offsetWidth;
+        rightPic.classList.add("show");
+    }, 500);
+    } 
+    
+    else {
+    rightPic.classList.remove("show");
+    rightPic.src = "";
+    }
+    });
+
+  </script>
+</body>
+</html>
